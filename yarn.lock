@@ -887,6 +887,18 @@
   resolved "https://registry.npmjs.org/@types/jest/-/jest-23.3.3.tgz#246ebcc52771d2327bb8e37aa971b412d9dc4237"
   integrity sha512-G6EBrbjWDfmIpYu8UcRBOhwtDiYaLj5N5jUR5rx0YvbKxRBhXPZVLUmtfShewSUNKiQwpHavpML69a2WMbIlEQ==
 
+"@types/lodash.memoize@^4.1.4":
+  version "4.1.4"
+  resolved "https://registry.npmjs.org/@types/lodash.memoize/-/lodash.memoize-4.1.4.tgz#d810e7cf438d322074b86bf3cfc14f8b5186619e"
+  integrity sha512-3u6RDBxMGQ+XM8lOD+Of5D1c4UZNwo5GmrYAIar6bruSpNb3feECCmG2Dr23/uZTCcEoGrMe/r84nelum3NpUQ==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.117"
+  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.117.tgz#695a7f514182771a1e0f4345d189052ee33c8778"
+  integrity sha512-xyf2m6tRbz8qQKcxYZa7PA4SllYcay+eh25DN3jmNYY6gSTL7Htc/bttVdkqj2wfJGbeWlQiX8pIyJpKU+tubw==
+
 "@types/node@*":
   version "10.1.2"
   resolved "https://registry.npmjs.org/@types/node/-/node-10.1.2.tgz#1b928a0baa408fc8ae3ac012cc81375addc147c6"

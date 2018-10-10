@@ -1,0 +1,15 @@
+{
+  "include": ["./src/"],
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "commonjs",
+    "lib": ["es2018"],
+    "declaration": true,
+    "outDir": "./build/",
+    "rootDir": "./src/",
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true
+  }
+}

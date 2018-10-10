@@ -49,16 +49,10 @@ export function toArray<K, V>(
     array.splice(childIndex, 1);
     return;
   });
-  const update = (value: any) => {
-    return ref.update(value);
-  };
-  const set = (value: any) => {
-    return ref.set(value);
-  };
   const unsub = () => {
     unsubChildAdded && unsubChildAdded();
     unsubChildRemoved && unsubChildRemoved();
   };
 
-  return { value: array, unsub, set, update };
+  return { value: array, unsub };
 }

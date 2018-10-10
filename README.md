@@ -1,12 +1,8 @@
 ## Mobx Firebase Database
 
-## The Problem
-
-While Firebase's Realtime Database enables you to build almost anything. Manipulating realtime data in your app can lead to writing code that is hard to debug & understand.
-
-## This Solution
-
-Enter MobX. MobX is a powerful state management library that works with all front-end frameworks.
+[![CircleCI][circleci-badge]][circleci-href]
+[![NPM][npm-version-badge]][npm-href]
+[![BundlePhobia][bundlephobia-badge]][bundlephobia-href]
 
 mobx-firebase-database allows you to map your Firebase data to MobX observables and interact with/react to it using MobX.
 
@@ -168,3 +164,11 @@ const { value: map } = toMap(ref);
 const { value: array } = toArray(ref);
 // IObservableArray<string, any>
 ```
+
+[circleci-href]: https://circleci.com/gh/rakannimer/mobx-firebase-database
+[circleci-badge]: https://img.shields.io/circleci/project/github/rakannimer/mobx-firebase-database.svg
+[npm-href]: https://www.npmjs.com/package/mobx-firebase-database
+[npm-version-badge]: https://img.shields.io/npm/v/mobx-firebase-database.svg
+[npm-license-badge]: https://img.shields.io/github/license/rakannimer/mobx-firebase-database.svg
+[bundlephobia-badge]: https://img.shields.io/bundlephobia/minzip/mobx-firebase-database.svg
+[bundlephobia-href]: https://bundlephobia.com/result?p=mobx-firebase-database

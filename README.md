@@ -68,7 +68,7 @@ const post = value.get(`${postId}`);
 
 ## API
 
-### `observable.box`
+### `mobxFirebaseDatabase`
 
 #### Input :
 
@@ -93,9 +93,78 @@ Object with shape :
 
 ```typescript
 type Output<T> = {
-  value: IObservableValue<T>;
-  unsub: () => void;
-  update: (value: any) => Promise<void>;
-  set: (value: any) => Promise<void>;
+  toArray: ToArray;
+  toBox: ToBox;
+  toMap: ToMap;
+  getFirebaseRef: (query: FirebaseQuery) => any;
+  destroy: () => void;
 };
+```
+
+### `toArray`, `toBox` and `toMap`
+
+#### Input
+
+All methods take in 2 arguments, the first is required and the second optional :
+
+- `ref` : Any firebase ref, with or without sorting and/or limiting.
+- `options` : depends on the method
+
+##### toBox
+
+```typescript
+type ToBoxOptions<V> = {
+  map?: (m: V) => any;
+  filter?: (m: V) => boolean;
+  initial?: V | null;
+};
+```
+
+##### toMap
+
+```typescript
+type ToMapOptions<K, V> = {
+  mapKey?: (m: K) => any;
+  mapValue?: (m: V) => any;
+  filter?: (prevValue: V, currentValue: V) => boolean;
+  initial?: ObservableMap<K, V>;
+};
+```
+
+##### toArray
+
+```typescript
+type ToArrayOptions<K, V> = {
+  map?: (k: K, v: V) => any;
+  filter?: (k: K, v: V) => boolean;
+  initial?: Array<V>;
+};
+```
+
+#### Output
+
+An object with the following shape :
+
+- `value` : Observable box with the latest value of the ref inside, or null if it doesn't exist or is not fetched yet.
+
+- `unsub` : A function to turn off the firebase ref listener when you don't need it anymore.
+
+##### toBox
+
+```typescript
+const { value, unsub } = toBox(ref, { initial: "something" });
+```
+
+##### toMap
+
+```typescript
+const { value: map } = toMap(ref);
+// map: ObservableMap<string, any>
+```
+
+##### toArray
+
+```typescript
+const { value: array } = toArray(ref);
+// IObservableArray<string, any>
 ```

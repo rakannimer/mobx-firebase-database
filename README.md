@@ -2,13 +2,13 @@
 
 ## The Problem
 
-While Firebase's Realtime Database enables you to build almost anything. Manipulating realtime data in your app can lead to quite difficult code to read.
+While Firebase's Realtime Database enables you to build almost anything. Manipulating realtime data in your app can lead to writing code that is hard to debug & understand.
 
 ## This Solution
 
 Enter MobX. MobX is a powerful state management library that works with all front-end frameworks.
 
-mobx-firebase-database allows you to map your Firebase data to MobX observables and interact with it using MobX
+mobx-firebase-database allows you to map your Firebase data to MobX observables and interact with/react to it using MobX.
 
 ## Install
 
@@ -60,15 +60,10 @@ value.get(); // null
 
 // toMap
 const postId = `my_post_id`;
-const postsRef = getFirebaseRef({ path: `posts`, orderByKeys: true });
-const { value, unsub, update, set } = toMap(postRef);
+const postsRef = getFirebaseRef({ path: `posts`, orderByKey: true });
+const { value, unsub } = toMap(postRef);
 const allPostsIds = value.keys();
 const post = value.get(`${postId}`);
-/* const posts = value.get(); // always contains the latest value of posts/${postId}
-await update({ last_seen_at: firebase.database.ServerValue.TIMESTAMP });
-value.get(); // {...post, last_seen_at: number}
-await set(null);
-value.get(); // null */
 ```
 
 ## API

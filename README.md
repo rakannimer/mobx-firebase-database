@@ -50,12 +50,12 @@ const { toBox, toArray, toMap, getFirebaseRef, destroy } = getMobxFire({
 // toBox
 const postId = `my_post_id`;
 const postRef = getFirebaseRef({ path: `posts/${postId}` });
-const { value, unsub, update, set } = toBox(postRef);
+const { value, unsub } = toBox(postRef);
 
 const post = value.get(); // always contains the latest value of posts/${postId}
-await update({ last_seen_at: firebase.database.ServerValue.TIMESTAMP });
+await postRef.update({ last_seen_at: firebase.database.ServerValue.TIMESTAMP });
 value.get(); // {...post, last_seen_at: number}
-await set(null);
+await postRef.set(null);
 value.get(); // null
 
 // toMap

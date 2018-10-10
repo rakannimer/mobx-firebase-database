@@ -36,7 +36,9 @@ export function toArray<K, V>(
     });
     const valueOrNull = !v ? null : v.val();
     const keyOrNull = !v ? null : v.key;
-    array.push(map(keyOrNull, valueOrNull));
+    if (filter(keyOrNull, valueOrNull)) {
+      array.push(map(keyOrNull, valueOrNull));
+    }
     return;
   });
   const unsubChildRemoved = ref.on("child_removed", (v: any) => {

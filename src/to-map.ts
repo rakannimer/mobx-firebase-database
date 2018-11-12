@@ -12,7 +12,6 @@ export type ToMapArgs<K, V> = {
   mapValue?: (m: V) => any;
   filter?: (prevValue: V, currentValue: V) => boolean;
   initial?: ObservableMap<K, V>;
-  getUnsub?: (func: (() => () => void)) => void;
 };
 
 export function toMap<K, V>(

@@ -11,29 +11,18 @@ export type ToArrayArgs<K, V> = {
   map?: (k: K, v: V) => any;
   filter?: (k: K, v: V) => boolean;
   initial?: Array<V>;
-  getUnsub?: (func: (() => () => void)) => void;
 };
 
 export function toArray<K, V>(
   ref: any,
-  {
-    map = defaultMap,
-    filter = defaultFilter,
-    initial = [],
-    getUnsub = () => {}
-  } = {
+  { map = defaultMap, filter = defaultFilter, initial = [] } = {
     map: defaultMap,
     filter: defaultFilter,
-    initial: [],
-    getUnsub: () => {}
+    initial: []
   } as ToArrayArgs<K, V>
 ) {
   const array = observable.array(initial);
   const unsubChildAdded = ref.on("child_added", (v: any) => {
-    getUnsub(() => () => {
-      unsubChildAdded && unsubChildAdded();
-      unsubChildRemoved && unsubChildRemoved();
-    });
     const valueOrNull = !v ? null : v.val();
     const keyOrNull = !v ? null : v.key;
     if (filter(keyOrNull, valueOrNull)) {

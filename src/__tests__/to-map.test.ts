@@ -21,7 +21,7 @@ describe("toMap", () => {
     config: config.client,
     firebase
   });
-  afterAll(async () => {
+  afterEach(async () => {
     const ref = getFirebaseRef({ firebase, path: `${testPath}` });
     await ref.set(null);
   });
@@ -100,5 +100,37 @@ Object {
       .set({});
     expect(toJS(map)).toMatchInlineSnapshot(`Object {}`);
     unsub();
+  });
+  test("works with child_changed", async () => {
+    const ref = getFirebaseRef({ firebase, path: testPath });
+    const { value: map } = toMap(ref);
+    await ref.set(listAsObject);
+    expect(toJS(map)).toMatchInlineSnapshot(`
+Object {
+  "id_0": Object {
+    "data": 0,
+  },
+  "id_1": Object {
+    "data": 1,
+  },
+}
+`);
+    await firebase
+      .database()
+      .ref(testPath + "/id_0")
+      .update({ NEW: "DATA" });
+    expect(toJS(map)).toMatchInlineSnapshot(`
+Object {
+  "id_0": Object {
+    "NEW": "DATA",
+    "data": 0,
+  },
+  "id_1": Object {
+    "data": 1,
+  },
+}
+`);
+    await ref.set({});
+    expect(toJS(map)).toMatchInlineSnapshot(`Object {}`);
   });
 });

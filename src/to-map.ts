@@ -62,9 +62,27 @@ export function toMap<K, V>(
     }
     map.delete(currentMapKey);
   });
+  const unsubChildChanged = ref.on("child_changed", (v: any) => {
+    const valueOrNull = !v ? null : v.val();
+    const keyOrNull = !v ? null : v.key;
+    const currentMapKey = mapKey(keyOrNull);
+    const currentMapValue = mapValue(valueOrNull);
+    if (!map.has(currentMapKey)) {
+      map.set(currentMapKey, observable.box(currentMapValue));
+      return;
+    }
+
+    const previousMapValue = map.get(currentMapKey).get();
+    const shouldUpdateValue = filter(previousMapValue, currentMapValue);
+    if (!shouldUpdateValue) {
+      return;
+    }
+    map.get(currentMapKey).set(currentMapValue);
+  });
   const unsub = () => {
     unsubChildAdded && unsubChildAdded();
     unsubChildRemoved && unsubChildRemoved();
+    unsubChildChanged && unsubChildChanged();
   };
 
   return { value: map, unsub };

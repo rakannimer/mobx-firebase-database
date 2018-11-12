@@ -7,28 +7,17 @@ function defaultFilter<T>(a: T) {
   return true;
 }
 
-function defaultShouldUnsub<T>(a: T) {
-  return false;
-}
-
 export type ToBoxArgs<T> = {
   map?: (m: T) => any;
   filter?: (m: T) => boolean;
-  shouldUnsubWhen?: (m: T) => boolean;
   initial?: T | null;
 };
 
 export function toBox<T>(
   ref: any,
-  {
-    map = defaultMap,
-    filter = defaultFilter,
-    shouldUnsubWhen = defaultShouldUnsub,
-    initial = null
-  } = {
+  { map = defaultMap, filter = defaultFilter, initial = null } = {
     map: defaultMap,
     filter: defaultFilter,
-    shouldUnsubWhen: defaultShouldUnsub,
     initial: null
   } as ToBoxArgs<T>
 ) {
@@ -37,9 +26,6 @@ export function toBox<T>(
     const valueOrNull = !v ? null : v.val();
     if (filter(valueOrNull)) {
       box.set(map(valueOrNull));
-    }
-    if (shouldUnsubWhen(valueOrNull)) {
-      unsub && unsub();
     }
   });
   const update = (value: any) => {

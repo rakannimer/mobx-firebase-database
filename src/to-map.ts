@@ -1,35 +1,28 @@
 import { observable, ObservableMap } from "mobx";
 import FirebaseArray from "firebase-array";
-function defaultMap<T>(a: T) {
+function defaultMap(a: any) {
   return a;
 }
-function defaultFilter<V>(p: V, c: V) {
+function defaultFilter(p: any, c: any) {
   return true;
 }
 
-export type ToMapArgs<K, V> = {
-  mapKey?: (m: K) => any;
-  mapValue?: (m: V) => any;
-  filter?: (prevValue: V, currentValue: V) => boolean;
-  initial?: ObservableMap<K, V>;
+export type ToMapArgs = {
+  mapKey?: (m: string | number) => any;
+  mapValue?: (m: any) => any;
+  filter?: (prevValue: any, currentValue: any) => boolean;
 };
 
-export function toMap<K extends string, V>(
+export function toMap(
   ref: any,
-  {
-    mapKey = defaultMap,
-    mapValue = defaultMap,
-    filter = defaultFilter,
-    // For better types. Object cant take enum for keys but maps can.
-    initial = observable.map({})
-  } = {
-    map: defaultMap,
-    filter: defaultFilter,
-    initial: observable.map({})
-  } as ToMapArgs<K, V>
+  { mapKey = defaultMap, mapValue = defaultMap, filter = defaultFilter } = {
+    mapKey: defaultMap,
+    mapValue: defaultMap,
+    filter: defaultFilter
+  }
 ) {
-  const map = initial;
-  const orderedKeys = new FirebaseArray();
+  const map = observable.map({});
+  const orderedKeys = new FirebaseArray(observable.array([]));
   const unsubChildAdded = ref.on("child_added", (v: any, previousKey: any) => {
     const valueOrNull = !v ? null : v.val();
     const keyOrNull = !v ? null : v.key;
@@ -97,5 +90,5 @@ export function toMap<K extends string, V>(
     unsubChildMoved && unsubChildMoved();
   };
 
-  return { value: map, unsub, keys: orderedKeys };
+  return { value: map, unsub, keys: orderedKeys.get() };
 }

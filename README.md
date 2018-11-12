@@ -38,7 +38,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 // Don't worry about calling it more than once.
-const { toBox, toArray, toMap, getFirebaseRef, destroy } = getMobxFire({
+const { toBox, toMap, getFirebaseRef, destroy } = getMobxFire({
   config,
   firebase
 });
@@ -97,7 +97,7 @@ type Output<T> = {
 };
 ```
 
-### `toArray`, `toBox` and `toMap`
+### `toBox` and `toMap`
 
 #### Input
 
@@ -127,16 +127,6 @@ type ToMapOptions<K, V> = {
 };
 ```
 
-##### toArray
-
-```typescript
-type ToArrayOptions<K, V> = {
-  map?: (k: K, v: V) => any;
-  filter?: (k: K, v: V) => boolean;
-  initial?: Array<V>;
-};
-```
-
 #### Output
 
 An object with the following shape :
@@ -154,15 +144,9 @@ const { value, unsub } = toBox(ref, { initial: "something" });
 ##### toMap
 
 ```typescript
-const { value: map } = toMap(ref);
+const { value: map, keys } = toMap(ref);
 // map: ObservableMap<string, any>
-```
-
-##### toArray
-
-```typescript
-const { value: array } = toArray(ref);
-// IObservableArray<string, any>
+// keys: IObservableArray<string>
 ```
 
 [circleci-href]: https://circleci.com/gh/rakannimer/mobx-firebase-database

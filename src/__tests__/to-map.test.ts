@@ -59,7 +59,7 @@ Object {
     const ref = getFirebaseRef({ firebase, path: testPath });
     const { value: map, keys } = toMap(ref);
     await ref.set(listAsObject);
-    expect(keys.get()).toMatchInlineSnapshot(`
+    expect(keys).toMatchInlineSnapshot(`
 Array [
   "id_0",
   "id_1",
@@ -79,14 +79,14 @@ Array [
     const { value: map, keys } = toMap(readRef);
 
     await writeRef.set(listAsObject);
-    expect(keys.get()).toMatchInlineSnapshot(`
+    expect(keys).toMatchInlineSnapshot(`
 Array [
   "id_0",
   "id_1",
 ]
 `);
     await writeRef.update({ id_: { A: "B" } });
-    expect(keys.get()).toMatchInlineSnapshot(`
+    expect(keys).toMatchInlineSnapshot(`
 Array [
   "id_",
   "id_0",
@@ -121,7 +121,7 @@ Object {
 
   test("works with custom mapValue", async () => {
     const ref = getFirebaseRef({ firebase, path: testPath, limitToFirst: 2 });
-    const { value: map, unsub } = toMap<string, { data: any }>(ref, {
+    const { value: map, unsub } = toMap(ref, {
       mapValue: v => {
         if (!v) return v;
         return v.data;

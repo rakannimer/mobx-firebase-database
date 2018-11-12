@@ -2,7 +2,6 @@ import initializeFirebaseApp from "initialize-firebase-app";
 import { getFirebaseRef, FirebaseQuery } from "get-firebase-ref";
 import memoize from "lodash.memoize";
 
-import { toArray } from "./to-array";
 import { toBox } from "./to-box";
 import { toMap } from "./to-map";
 
@@ -32,7 +31,6 @@ export const getMobxFire = memoize(
     };
 
     return {
-      toArray,
       toBox,
       toMap,
       getFirebaseRef: _getFirebaseRef,

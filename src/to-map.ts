@@ -1,4 +1,4 @@
-import { observable, ObservableMap } from "mobx";
+import { observable } from "mobx";
 import FirebaseArray from "firebase-array";
 function defaultMap(a: any) {
   return a;
@@ -22,14 +22,21 @@ export function toMap(
   }
 ) {
   const map = observable.map({});
-  const orderedKeys = new FirebaseArray(observable.array([]));
+  const orderedKeys = new FirebaseArray(
+    observable.array([]),
+    observable.array([])
+  );
   const unsubChildAdded = ref.on("child_added", (v: any, previousKey: any) => {
     const valueOrNull = !v ? null : v.val();
     const keyOrNull = !v ? null : v.key;
     const previousKeyOrNull = !previousKey ? null : previousKey;
     const currentMapKey = mapKey(keyOrNull);
     const currentMapValue = mapValue(valueOrNull);
-    orderedKeys.childAdded(currentMapKey, mapKey(previousKeyOrNull));
+    orderedKeys.childAdded(
+      currentMapKey,
+      currentMapValue,
+      mapKey(previousKeyOrNull)
+    );
     if (!map.has(currentMapKey)) {
       map.set(currentMapKey, observable.box(currentMapValue));
       return;
@@ -77,10 +84,16 @@ export function toMap(
   });
 
   const unsubChildMoved = ref.on("child_moved", (v: any, previousKey: any) => {
+    const valueOrNull = !v ? null : v.val();
     const keyOrNull = !v ? null : v.key;
     const currentMapKey = mapKey(keyOrNull);
+    const currentMapValue = mapValue(valueOrNull);
     const previousKeyOrNull = !previousKey ? null : previousKey;
-    orderedKeys.childMoved(currentMapKey, mapKey(previousKeyOrNull));
+    orderedKeys.childMoved(
+      currentMapKey,
+      currentMapValue,
+      mapKey(previousKeyOrNull)
+    );
   });
 
   const unsub = () => {
@@ -90,5 +103,10 @@ export function toMap(
     unsubChildMoved && unsubChildMoved();
   };
 
-  return { value: map, unsub, keys: orderedKeys.get() };
+  return {
+    value: map,
+    unsub,
+    keys: orderedKeys.get().keys,
+    values: orderedKeys.get().values
+  };
 }

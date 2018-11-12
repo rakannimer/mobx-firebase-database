@@ -3677,6 +3677,11 @@ find-versions@^2.0.0:
     array-uniq "^1.0.0"
     semver-regex "^1.0.0"
 
+firebase-array@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/firebase-array/-/firebase-array-1.0.0.tgz#b10f89b0622dd6bf1857a8031a3a90aac84eaf7b"
+  integrity sha512-fhkHX6qYqffG7P+bJhIg/Gel1W7zdrfbNvET+24cs13S0jRt4Lfv626M7If6GC5fnwznjUCwFOWxL9dHgQpvrg==
+
 firebase@^5.5.3:
   version "5.5.3"
   resolved "https://registry.npmjs.org/firebase/-/firebase-5.5.3.tgz#e4a1250899b57d5953eab02df9ac8b75452fbd9b"

@@ -54,6 +54,49 @@ Object {
     await ref.set({});
     expect(toJS(map)).toMatchInlineSnapshot(`Object {}`);
   });
+
+  test("returns ordered array of keys", async () => {
+    const ref = getFirebaseRef({ firebase, path: testPath });
+    const { value: map, keys } = toMap(ref);
+    await ref.set(listAsObject);
+    expect(keys.get()).toMatchInlineSnapshot(`
+Array [
+  "id_0",
+  "id_1",
+]
+`);
+    await ref.set({});
+    expect(toJS(map)).toMatchInlineSnapshot(`Object {}`);
+  });
+
+  test("returns array of keys changes when child_moved", async () => {
+    const readRef = getFirebaseRef({
+      firebase,
+      path: testPath,
+      orderByKey: true
+    });
+    const writeRef = getFirebaseRef({ firebase, path: testPath });
+    const { value: map, keys } = toMap(readRef);
+
+    await writeRef.set(listAsObject);
+    expect(keys.get()).toMatchInlineSnapshot(`
+Array [
+  "id_0",
+  "id_1",
+]
+`);
+    await writeRef.update({ id_: { A: "B" } });
+    expect(keys.get()).toMatchInlineSnapshot(`
+Array [
+  "id_",
+  "id_0",
+  "id_1",
+]
+`);
+    await writeRef.set({});
+    expect(toJS(map)).toMatchInlineSnapshot(`Object {}`);
+  });
+
   test("works with custom mapKey", async () => {
     const ref = getFirebaseRef({ firebase, path: testPath });
     const { value: map } = toMap(ref, {

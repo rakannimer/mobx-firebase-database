@@ -1,5 +1,5 @@
 import { observable, ObservableMap } from "mobx";
-
+import FirebaseArray from "firebase-array";
 function defaultMap<T>(a: T) {
   return a;
 }
@@ -14,7 +14,7 @@ export type ToMapArgs<K, V> = {
   initial?: ObservableMap<K, V>;
 };
 
-export function toMap<K, V>(
+export function toMap<K extends string, V>(
   ref: any,
   {
     mapKey = defaultMap,
@@ -29,11 +29,14 @@ export function toMap<K, V>(
   } as ToMapArgs<K, V>
 ) {
   const map = initial;
-  const unsubChildAdded = ref.on("child_added", (v: any) => {
+  const orderedKeys = new FirebaseArray();
+  const unsubChildAdded = ref.on("child_added", (v: any, previousKey: any) => {
     const valueOrNull = !v ? null : v.val();
     const keyOrNull = !v ? null : v.key;
+    const previousKeyOrNull = !previousKey ? null : previousKey;
     const currentMapKey = mapKey(keyOrNull);
     const currentMapValue = mapValue(valueOrNull);
+    orderedKeys.childAdded(currentMapKey, mapKey(previousKeyOrNull));
     if (!map.has(currentMapKey)) {
       map.set(currentMapKey, observable.box(currentMapValue));
       return;
@@ -44,7 +47,6 @@ export function toMap<K, V>(
       return;
     }
     map.get(currentMapKey).set(currentMapValue);
-
     return;
   });
   const unsubChildRemoved = ref.on("child_removed", (v: any) => {
@@ -55,6 +57,7 @@ export function toMap<K, V>(
     if (!map.has(currentMapKey)) {
       return;
     }
+    orderedKeys.childRemoved(currentMapKey);
     const previousMapValue = map.get(currentMapKey).get();
     const shouldUpdateValue = filter(previousMapValue, currentMapValue);
     if (!shouldUpdateValue) {
@@ -79,11 +82,20 @@ export function toMap<K, V>(
     }
     map.get(currentMapKey).set(currentMapValue);
   });
+
+  const unsubChildMoved = ref.on("child_moved", (v: any, previousKey: any) => {
+    const keyOrNull = !v ? null : v.key;
+    const currentMapKey = mapKey(keyOrNull);
+    const previousKeyOrNull = !previousKey ? null : previousKey;
+    orderedKeys.childMoved(currentMapKey, mapKey(previousKeyOrNull));
+  });
+
   const unsub = () => {
     unsubChildAdded && unsubChildAdded();
     unsubChildRemoved && unsubChildRemoved();
     unsubChildChanged && unsubChildChanged();
+    unsubChildMoved && unsubChildMoved();
   };
 
-  return { value: map, unsub };
+  return { value: map, unsub, keys: orderedKeys };
 }
